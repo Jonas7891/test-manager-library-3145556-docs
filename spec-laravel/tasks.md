@@ -4,7 +4,7 @@ Mismas tareas que [`../spec-python/tasks.md`](../spec-python/tasks.md). Una tare
 puede ejecutar (artículo XII). Estados posibles: **hecha**, **parcial** (falta parte de la evidencia) y **pendiente**.
 
 Rutas relativas a cada repositorio. La suite de `api` se corre con
-`docker compose -f docker-compose.test.yml run --rm --build tests` y da **59 pruebas, 387 aserciones, todas en verde**
+`docker compose -f docker-compose.test.yml run --rm --build tests` y da **59 pruebas, 394 aserciones, todas en verde**
 (13-10-2026).
 
 | # | Tarea | Estado | Evidencia |
@@ -23,21 +23,21 @@ Rutas relativas a cada repositorio. La suite de `api` se corre con
 | T-12 | Repositorios de libro, socio y usuario | hecha | `api`: `tests/Feature/*ContractTest` contra PostgreSQL real |
 | T-13 | Repositorio de préstamos + testigo | hecha | `api`: `tests/Feature/ConcurrencyTest.php`: del último ejemplar se registra un solo préstamo ([ADR-005](adr/adr-005-testigo-de-concurrencia-sin-columna-version.md)) |
 | T-14 | Hash y JWT | hecha | `api`: el contrato comprueba que ninguna respuesta incluye `password`; Argon2id + JWT HS256 de 8 h (`expires_in: 28800`) |
-| T-15 | Portadas en disco | parcial | `api`: `test_cover_upload_validates_type_and_size_ca_03_4` (PNG aceptado, tipo falso → 422, sin portada → `null`). El rechazo de un archivo de 3 MB está en `BookCoverService` pero no tiene prueba propia |
+| T-15 | Portadas en disco | hecha | `api`: `test_cover_upload_validates_type_and_size_ca_03_4`: PNG de 2 MB aceptado, 3 MB → 422, tipo falso → 422, sin portada → `null` |
 | T-16 | Adaptador HTTP y cuerpo de error único | hecha | `api`: `AuthAndCatalogContractTest` y `LoansContractTest` recorren las rutas y los códigos de §2 |
 | T-17 | Composición y admin inicial | hecha | `api`: `PortBindingsServiceProvider`; `library:bootstrap-admin` al arrancar; login de admin con la base recién creada |
 | T-18 | `ck_book_total_positive`, `ck_user_role` | hecha | `api`: migración `2026_10_13_000003_*`; `DatabaseInvariantsTest`; aparecen en [`evidencia/t-02-esquema.txt`](evidencia/t-02-esquema.txt). En esta traducción, data-model §4 las marca ahora como **motor** |
 | T-19 | Pruebas de arquitectura | hecha | `api`: `tests/Unit/Architecture/LayersTest.php` (incluye una prueba de que el verificador detecta importaciones prohibidas) |
 | T-20 | `infra`: `docker compose up` | hecha | `infra`: `docker compose up -d --build` levanta db, api y app; el repo no contiene `CREATE TABLE` |
 | T-21 | `tool`: sembrador por la API | hecha | `tool`: `node seed/seed.mjs --check` → «Vencidos: 3» y 12 filas en el reporte (salida en el README de `tool`) |
-| T-22 | `app`: recorrido de punta a punta | parcial | `app`: `npm run build` sin errores y el recorrido escrito en el README. Falta grabar el recorrido manual (capturas) en la feria |
+| T-22 | `app`: recorrido de punta a punta | parcial | `app`: `npm run build` sin errores y el recorrido escrito en el README. El recorrido en la feria ocurre después de la entrega (ver N-3 en [`no-realizado-y-motivos.md`](no-realizado-y-motivos.md)) |
 | T-23 | `page`: sitio estático | hecha | `page`: HTML y CSS sin JavaScript (`grep -c "fetch\|<script" index.html` → 0) y diseño responsivo |
 
 ## Requisitos no funcionales
 
 | # | Estado | Evidencia |
 |---|---|---|
-| RNF-1 (búsqueda < 300 ms con 5 000 libros) | pendiente | No hay prueba de carga; existe el índice `ix_book_category_title_active` |
+| RNF-1 (búsqueda < 300 ms con 5 000 libros) | hecho | `tool`: `node seed/load.mjs` con 5 000 libros: p95 58.3 ms, máximo 66.8 ms |
 | RNF-2 (último ejemplar) | hecho | `ConcurrencyTest` |
 | RNF-3 (contraseña nunca en claro ni en logs) | hecho | Argon2id; `assertErrorBody` comprueba que ninguna respuesta incluye `password`; los errores de dominio no se registran en el log |
 | RNF-4 (cuerpo de error único) | hecho | `ErrorRenderer`; todas las pruebas de contrato usan `assertErrorBody` |
