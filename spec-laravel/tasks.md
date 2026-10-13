@@ -30,7 +30,7 @@ Paths are relative to each repository. The `api` suite runs with
 | T-19 | Architecture tests | done | `api`: `tests/Unit/Architecture/LayersTest.php` (includes a test showing the checker catches forbidden imports) |
 | T-20 | `infra`: `docker compose up` | done | `infra`: `docker compose up -d --build` starts db, api and app; the repo contains no `CREATE TABLE` |
 | T-21 | `tool`: seeder through the API | done | `tool`: `node seed/seed.mjs --check` → "Vencidos: 3" and 12 report rows (output in the `tool` README) |
-| T-22 | `app`: end-to-end walkthrough | partial | `app`: `npm run build` with no errors and the walkthrough written in the README. The walkthrough at the fair happens after the deadline (see N-3 in [`not-done-and-reasons.md`](not-done-and-reasons.md)) |
+| T-22 | `app`: end-to-end walkthrough | partial | `app`: `npm run build` with no errors. Recorded walkthrough defined in [ADR-011](adr/adr-011-recorded-walkthrough-as-t22-evidence.md) (`e2e/walkthrough.mjs`, screenshots in `evidence/t-22/`), in progress |
 | T-23 | `page`: static site | done | `page`: HTML and CSS without JavaScript (`grep -c "fetch\|<script" index.html` → 0) and a responsive layout |
 
 ## Non-functional requirements
