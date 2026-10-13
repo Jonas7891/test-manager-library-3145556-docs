@@ -38,6 +38,7 @@ rutas de carpetas; el negocio es idéntico. Se tomó `spec-python/` como base de
 | [`decisiones-y-huecos.md`](decisiones-y-huecos.md) | Ambigüedades del spec y la decisión tomada |
 | [`trazabilidad.md`](trazabilidad.md) | HU / CA → endpoint → clase → prueba |
 | [`tasks.md`](tasks.md) | Estado real de T-01…T-23 con enlace a la evidencia |
+| [`no-realizado-y-motivos.md`](no-realizado-y-motivos.md) | Lo que no se pudo realizar tal como dice el spec y por qué |
 | [`adr/`](adr/) | ADR-005, ADR-006 y ADR-007 |
 | `evidencia/` | Salidas de comandos usadas como evidencia |
 
