@@ -30,7 +30,7 @@ Paths are relative to each repository. The `api` suite runs with
 | T-19 | Architecture tests | done | `api`: `tests/Unit/Architecture/LayersTest.php` (includes a test showing the checker catches forbidden imports) |
 | T-20 | `infra`: `docker compose up` | done | `infra`: `docker compose up -d --build` starts db, api and app; the repo contains no `CREATE TABLE` |
 | T-21 | `tool`: seeder through the API | done | `tool`: `node seed/seed.mjs --check` → "Vencidos: 3" and 12 report rows (output in the `tool` README) |
-| T-22 | `app`: end-to-end walkthrough | partial | `app`: `npm run build` with no errors. Recorded walkthrough defined in [ADR-011](adr/adr-011-recorded-walkthrough-as-t22-evidence.md) (`e2e/walkthrough.mjs`, screenshots in `evidence/t-22/`), in progress |
+| T-22 | `app`: end-to-end walkthrough | done | `app`: `npm run walkthrough` drives the real app in a browser through 8 steps (login, catalogue, members, lend, return, overdue, report, librarian menus). The 13-10-2026 run was all green; screenshots in `evidence/t-22/` ([ADR-011](adr/adr-011-recorded-walkthrough-as-t22-evidence.md)). The live walkthrough at the fair repeats it |
 | T-23 | `page`: static site | done | `page`: HTML and CSS without JavaScript (`grep -c "fetch\|<script" index.html` → 0) and a responsive layout |
 
 ## Non-functional requirements

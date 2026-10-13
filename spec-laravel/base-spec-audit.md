@@ -34,7 +34,7 @@ HTTP contract and the data model are identical.
 | B-9 | T-18: "`data-model.md` §4 is updated" once the constraints are applied | The base `data-model.md` keeps them as **pending (T-18)**. Editing the base would rewrite the instructor's spec | Constraints applied in the migrations; the base was not edited. The new marks live in the translation | [ADR-010](adr/adr-010-t18-constraints-recorded-in-the-translation.md) |
 | B-10 | Constitution Art. IX: secret check with `gitleaks` or `grep` **in CI** | The six repositories have no CI, and adding it is outside the scope | **Not done in CI**; a manual check was done on 13-10-2026 | [`not-done-and-reasons.md`](not-done-and-reasons.md) N-1 |
 | B-11 | D-08: covers on S3 in production | There is no production environment or S3 account for the test | **Not done**; disk adapter only, behind the `CoverStorage` port | N-2 |
-| B-12 | T-22: evidence is "a manual end-to-end walkthrough **at the fair**" | That evidence only exists after the deadline | **Partial**: the build works and the walkthrough is written down | N-3 |
+| B-12 | T-22: evidence is "a manual end-to-end walkthrough **at the fair**" | That evidence only exists after the deadline | Recorded walkthrough that can be run again, plus screenshots; the fair demo still happens | [ADR-011](adr/adr-011-recorded-walkthrough-as-t22-evidence.md) |
 | B-13 | `plan.md` D-07 lists four value objects (`Isbn`, `Quantity`, `DocumentNumber`, `DateRange`) | T-03 lists only three and leaves out `DocumentNumber` | `DocumentNumber` was implemented and tested anyway (`ValueObjectsTest`) | — |
 | B-14 | `spec-python/tasks.md` T-04/T-05 use method names `Withdraw`, `Restock`, `AddItem`, `ReturnItem` | PascalCase is the .NET convention, copied into the Python version | Naming only; the translation uses PHP camelCase (`withdraw`, `restock`) | — |
 | B-15 | Base commit message footer | The instructor's commit `d1364dd` (and the base commit of the other five repositories) carries a `Co-Authored-By` trailer, which the delivery rules forbid for our commits | **Not changed**: it is someone else's history and would need a `push --force` | N-5 |
@@ -42,9 +42,9 @@ HTTP contract and the data model are identical.
 
 ## 3. Summary
 
-- **Corrected in the translation and backed by an ADR:** B-1, B-3, B-4, B-6, B-7 and B-9.
+- **Corrected in the translation and backed by an ADR:** B-1, B-3, B-4, B-6, B-7, B-9 and B-12.
 - **Resolved as a gap decision (no architecture impact):** B-5, B-8, B-13, B-14 and B-16.
-- **Not done, with the reason recorded:** B-2, B-10, B-11, B-12 and B-15.
+- **Not done, with the reason recorded:** B-2, B-10, B-11 and B-15.
 - **Base spec:** unchanged. These small faults are left in the base as delivered.
 
 ## 4. Scope check: nothing added, nothing removed
@@ -59,7 +59,7 @@ Checked on 13-10-2026 against `spec-python/api-contract.md`, `spec.md` and `task
 | User stories / acceptance criteria | HU-01…HU-10 | All traced to a test in [`traceability.md`](traceability.md) | None |
 | Frontend calls | Contract endpoints only | The app only calls contract endpoints (users: `POST /users` only) | None |
 | Configuration | Variables in `plan.md` §2 | Same variables | **+1** `CLOCK_OFFSET_DAYS`, `0` by default, demo only (B-3, ADR-006) |
-| Tasks | T-01…T-23 | 22 done, T-22 partial | T-22 evidence is the fair walkthrough (B-12) |
+| Tasks | T-01…T-23 | All 23 done | T-22 evidence is a recorded walkthrough (B-12, ADR-011) |
 | Not delivered | — | CI secret scan, S3 adapter, ADR-002 retry | B-10, B-11, B-2 |
 
 `tool/seed/load.mjs` and `seed.mjs --check` are evidence scripts for RNF-1 and T-21, not product features.
