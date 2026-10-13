@@ -28,3 +28,8 @@
 - **Consequences:** the T-21 and T-22 evidence is regenerated with the new data.
 - **How it is verified:** `npm run build` shows separate chunks; `node seed/seed.mjs --check` prints "Vencidos: 3" with the new
   titles; `npm run walkthrough` passes all 8 steps again.
+- **Result (13-10-2026):**
+  - `npm run build` emits one chunk per screen; `ReportPage` and `UsersPage` are loaded only by the admin.
+  - The database was emptied and reseeded through the API. `seed.mjs --check` → "Vencidos: 3" (Charlie y la fábrica de
+    chocolate, Crónica de una muerte anunciada, El hombre que confundió a su mujer con un sombrero) and 12 report rows.
+  - `npm run walkthrough`: 8 steps green; screenshots refreshed in `app/evidence/t-22/`.
