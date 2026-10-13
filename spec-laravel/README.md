@@ -20,12 +20,12 @@ rutas de carpetas; el negocio es idéntico. Se tomó `spec-python/` como base de
 
 | Tema | Python | .NET | Reto (este documento) |
 |---|---|---|---|
-| Backend | FastAPI | ASP.NET Core | **Laravel 11 (PHP 8.3)** |
+| Backend | FastAPI | ASP.NET Core | **Laravel 13 (PHP 8.4)** |
 | Persistencia | SQLAlchemy + Alembic | EF Core + migraciones | **Migraciones de Laravel + Query Builder** |
 | Hash | Argon2id | BCrypt | **Argon2id** (`password_hash`) |
 | Token | JWT HS256 | JWT HS256 | **JWT HS256** con `firebase/php-jwt` ([ADR-007](adr/adr-007-jwt-propio-en-vez-de-sanctum.md)) |
 | Pruebas | pytest | xUnit | **PHPUnit** |
-| Arquitectura | import-linter | NetArchTest | **Test PHPUnit que inspecciona los `use`** |
+| Arquitectura | import-linter | NetArchTest | **Test PHPUnit que inspecciona los `use`** (`tests/Unit/Architecture`) |
 | Frontend | React | React | **React + Vite** |
 | Motor | PostgreSQL 16 | PostgreSQL 16 | **PostgreSQL 16** (sin cambio) |
 

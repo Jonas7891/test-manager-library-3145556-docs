@@ -1,0 +1,81 @@
+-- Evidencia T-02 / T-18: consultas de data-model.md §10 contra el motor levantado por infra (13-10-2026)
+ table_name | ordinal_position |    column_name    |        data_type         | is_nullable | column_default 
+------------+------------------+-------------------+--------------------------+-------------+----------------
+ book       |                1 | id                | uuid                     | NO          | 
+ book       |                2 | title             | character varying        | NO          | 
+ book       |                3 | author            | character varying        | NO          | 
+ book       |                4 | isbn              | character                | NO          | 
+ book       |                5 | category_id       | uuid                     | NO          | 
+ book       |                6 | total_copies      | integer                  | NO          | 
+ book       |                7 | available_copies  | integer                  | NO          | 
+ book       |                8 | cover_key         | character varying        | YES         | 
+ book       |                9 | deleted_at        | timestamp with time zone | YES         | 
+ category   |                1 | id                | uuid                     | NO          | 
+ category   |                2 | name              | character varying        | NO          | 
+ loan       |                1 | id                | uuid                     | NO          | 
+ loan       |                2 | member_id         | uuid                     | NO          | 
+ loan       |                3 | loaned_by_user_id | uuid                     | NO          | 
+ loan       |                4 | loaned_at         | timestamp with time zone | NO          | 
+ loan_item  |                1 | id                | uuid                     | NO          | 
+ loan_item  |                2 | loan_id           | uuid                     | NO          | 
+ loan_item  |                3 | book_id           | uuid                     | NO          | 
+ loan_item  |                4 | book_title        | character varying        | NO          | 
+ loan_item  |                5 | isbn              | character                | NO          | 
+ loan_item  |                6 | category_name     | character varying        | NO          | 
+ loan_item  |                7 | due_at            | timestamp with time zone | NO          | 
+ loan_item  |                8 | returned_at       | timestamp with time zone | YES         | 
+ member     |                1 | id                | uuid                     | NO          | 
+ member     |                2 | full_name         | character varying        | NO          | 
+ member     |                3 | document_number   | character varying        | NO          | 
+ user       |                1 | id                | uuid                     | NO          | 
+ user       |                2 | username          | character varying        | NO          | 
+ user       |                3 | password_hash     | character varying        | NO          | 
+ user       |                4 | role              | character varying        | NO          | 
+(30 rows)
+
+ conrelid  |         conname         | contype |                                            pg_get_constraintdef                                            
+-----------+-------------------------+---------+------------------------------------------------------------------------------------------------------------
+ category  | pk_category             | p       | PRIMARY KEY (id)
+ book      | ck_book_available_range | c       | CHECK (((available_copies >= 0) AND (available_copies <= total_copies)))
+ book      | ck_book_total_positive  | c       | CHECK ((total_copies >= 1))
+ book      | fk_book_category        | f       | FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE RESTRICT
+ book      | pk_book                 | p       | PRIMARY KEY (id)
+ member    | pk_member               | p       | PRIMARY KEY (id)
+ "user"    | ck_user_role            | c       | CHECK (((role)::text = ANY ((ARRAY['admin'::character varying, 'librarian'::character varying])::text[])))
+ "user"    | pk_user                 | p       | PRIMARY KEY (id)
+ loan      | fk_loan_member          | f       | FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE RESTRICT
+ loan      | fk_loan_user            | f       | FOREIGN KEY (loaned_by_user_id) REFERENCES "user"(id) ON DELETE RESTRICT
+ loan      | pk_loan                 | p       | PRIMARY KEY (id)
+ loan_item | fk_loan_item_book       | f       | FOREIGN KEY (book_id) REFERENCES book(id) ON DELETE RESTRICT
+ loan_item | fk_loan_item_loan       | f       | FOREIGN KEY (loan_id) REFERENCES loan(id) ON DELETE CASCADE
+ loan_item | pk_loan_item            | p       | PRIMARY KEY (id)
+(14 rows)
+
+ tablename |           indexname           |                                                        indexdef                                                        
+-----------+-------------------------------+------------------------------------------------------------------------------------------------------------------------
+ book      | ix_book_category_title_active | CREATE INDEX ix_book_category_title_active ON library.book USING btree (category_id, title) WHERE (deleted_at IS NULL)
+ book      | pk_book                       | CREATE UNIQUE INDEX pk_book ON library.book USING btree (id)
+ book      | ux_book_isbn_active           | CREATE UNIQUE INDEX ux_book_isbn_active ON library.book USING btree (isbn) WHERE (deleted_at IS NULL)
+ category  | pk_category                   | CREATE UNIQUE INDEX pk_category ON library.category USING btree (id)
+ category  | ux_category_name              | CREATE UNIQUE INDEX ux_category_name ON library.category USING btree (name)
+ loan      | ix_loan_loaned_at             | CREATE INDEX ix_loan_loaned_at ON library.loan USING btree (loaned_at)
+ loan      | pk_loan                       | CREATE UNIQUE INDEX pk_loan ON library.loan USING btree (id)
+ loan_item | ix_loan_item_book             | CREATE INDEX ix_loan_item_book ON library.loan_item USING btree (book_id)
+ loan_item | ix_loan_item_due_open         | CREATE INDEX ix_loan_item_due_open ON library.loan_item USING btree (due_at) WHERE (returned_at IS NULL)
+ loan_item | pk_loan_item                  | CREATE UNIQUE INDEX pk_loan_item ON library.loan_item USING btree (id)
+ loan_item | ux_loan_item_loan_book        | CREATE UNIQUE INDEX ux_loan_item_loan_book ON library.loan_item USING btree (loan_id, book_id)
+ member    | pk_member                     | CREATE UNIQUE INDEX pk_member ON library.member USING btree (id)
+ member    | ux_member_document_number     | CREATE UNIQUE INDEX ux_member_document_number ON library.member USING btree (document_number)
+ user      | pk_user                       | CREATE UNIQUE INDEX pk_user ON library."user" USING btree (id)
+ user      | ux_user_username              | CREATE UNIQUE INDEX ux_user_username ON library."user" USING btree (username)
+(15 rows)
+
+                  id                  |    name    
+--------------------------------------+------------
+ 22222222-2222-4222-8222-222222222222 | Ciencia
+ 44444444-4444-4444-8444-444444444444 | Historia
+ 55555555-5555-4555-8555-555555555555 | Infantil
+ 11111111-1111-4111-8111-111111111111 | Novela
+ 33333333-3333-4333-8333-333333333333 | Tecnología
+(5 rows)
+

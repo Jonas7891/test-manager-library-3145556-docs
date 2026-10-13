@@ -6,7 +6,7 @@ Traducción de [`../spec-python/plan.md`](../spec-python/plan.md). El negocio no
 
 | # | Decisión | Elección (reto) | Por qué |
 |---|---|---|---|
-| D-01 | Lenguaje y runtime | PHP 8.3 + Laravel 11 | Stack del reto |
+| D-01 | Lenguaje y runtime | PHP 8.4 + Laravel 13 | Stack del reto. Laravel 11 quedó descartado: Composer bloquea sus versiones por avisos de seguridad |
 | D-02 | Framework HTTP | Rutas de Laravel con prefijo `api/v1`, controladores delgados | Contrato en `api-contract.md` |
 | D-03 | Persistencia | Migraciones de Laravel (SQL explícito) + Query Builder sobre PostgreSQL 16, esquema `library` | ADR-001: el esquema es de las migraciones |
 | D-04 | Concurrencia | Compare-and-set sobre `available_copies` + `CHECK ck_book_available_range` ([ADR-005](adr/adr-005-testigo-de-concurrencia-sin-columna-version.md)) | RNF-2 sin añadir columnas al modelo |
@@ -35,6 +35,7 @@ Traducción de [`../spec-python/plan.md`](../spec-python/plan.md). El negocio no
 | Nivel | Qué prueba | Dónde (repo `api`) |
 |---|---|---|
 | Dominio | Invariantes: máximo 3, vencimiento a 14 días, disponibles en rango | `tests/Unit/Domain/` |
+| Motor | `CHECK`, FK y ausencia de `DEFAULT` | `tests/Feature/DatabaseInvariantsTest.php` |
 | Aplicación | Casos de uso con fakes de los puertos | `tests/Unit/Application/` |
 | Contrato | Rutas, códigos de §2, cuerpo de error único | `tests/Feature/` (PostgreSQL real) |
 | Arquitectura | Artículos I, II y III | `tests/Unit/Architecture/` |

@@ -20,3 +20,6 @@ una lectura y la deja escrita. Si una decisión es de arquitectura, tiene su ADR
 | H-13 | `GET /loans/overdue` es un listado: ¿lleva paginación? | contrato §3.6 | Responde `{items, page, size, total}` como el resto de listados |
 | H-14 | `GET /members` acepta `q`, pero no dice sobre qué campos busca | CA-05.2 | Coincidencia parcial sin distinguir mayúsculas en `full_name` o `document_number` |
 | H-15 | ¿Se pueden reducir los ejemplares por debajo de los prestados? | CA-03.3 | No: la diferencia se aplica a los disponibles, y si quedan < 0 → 422 `VALIDATION_ERROR` |
+| H-16 | El contrato §1 manda 401 sin token o con token vencido, pero el catálogo §2 no tiene un código para ese caso | contrato §1 / §2 | Se usa `INVALID_CREDENTIALS`, el único código 401 del catálogo, con el mensaje «Se requiere un token válido y vigente.». No se inventan códigos |
+| H-17 | `PUT /books/{id}/cover` es `multipart/form-data`, pero PHP no interpreta multipart en un `PUT` real | contrato §3.4 | La ruta se mantiene; el cliente envía `POST` con `_method=PUT` (suplantación de método de Laravel). Documentado en el README de `api` |
+| H-18 | `artisan serve` filtra las variables de entorno de sus procesos y la API terminaba usando SQLite | RNF-5 | El contenedor sirve con el servidor embebido de PHP, que hereda el entorno; `pgsql` también es la conexión por defecto |
