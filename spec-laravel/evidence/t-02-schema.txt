@@ -1,4 +1,4 @@
--- Evidencia T-02 / T-18: consultas de data-model.md §10 contra el motor levantado por infra (13-10-2026)
+-- Evidence for T-02 / T-18: data-model.md §10 queries against the engine started by infra (13-10-2026)
  table_name | ordinal_position |    column_name    |        data_type         | is_nullable | column_default 
 ------------+------------------+-------------------+--------------------------+-------------+----------------
  book       |                1 | id                | uuid                     | NO          | 
