@@ -1,31 +1,31 @@
-# Arquitectura — Manager Library (Laravel)
+# Architecture — Manager Library (Laravel)
 
-La misma arquitectura **hexagonal** de [`../spec-python/architecture.md`](../spec-python/architecture.md), expresada con las
-convenciones de Laravel. Las reglas de dependencia (artículos I a III) no cambian.
+This is the same **hexagonal** architecture as [`../spec-python/architecture.md`](../spec-python/architecture.md), expressed with
+Laravel conventions. The dependency rules (articles I to III) do not change.
 
-## 1. Capas y dependencias
+## 1. Layers and dependencies
 
 ```mermaid
 flowchart LR
-    subgraph Entrada
-      HTTP["app/Adapters/Inbound/Http<br/>(controladores Laravel)"]
+    subgraph Inbound
+      HTTP["app/Adapters/Inbound/Http<br/>(Laravel controllers)"]
     end
-    subgraph Núcleo
-      APP["app/Application<br/>casos de uso + puertos"]
-      DOM["app/Domain<br/>PHP puro"]
+    subgraph Core
+      APP["app/Application<br/>use cases + ports"]
+      DOM["app/Domain<br/>plain PHP"]
     end
-    subgraph Salida
-      DB["app/Adapters/Outbound/Persistence<br/>(Query Builder + migraciones)"]
-      STO["app/Adapters/Outbound/Storage<br/>portadas"]
-      SEC["app/Adapters/Outbound/Security<br/>Argon2id y JWT"]
+    subgraph Outbound
+      DB["app/Adapters/Outbound/Persistence<br/>(Query Builder + migrations)"]
+      STO["app/Adapters/Outbound/Storage<br/>covers"]
+      SEC["app/Adapters/Outbound/Security<br/>Argon2id and JWT"]
     end
     HTTP --> APP --> DOM
-    DB -. implementa puertos de .-> APP
-    STO -. implementa .-> APP
-    SEC -. implementa .-> APP
+    DB -. implements ports of .-> APP
+    STO -. implements .-> APP
+    SEC -. implements .-> APP
 ```
 
-## 2. Estructura de carpetas (repo `api`)
+## 2. Folder structure (`api` repo)
 
 ```text
 app/
@@ -33,51 +33,51 @@ app/
 ├── Application/
 │   ├── Ports/           # BookRepository, LoanRepository, MemberRepository, UserRepository,
 │   │                    # ReportReader, Clock, PasswordHasher, TokenIssuer, CoverStorage
-│   └── Services/        # un caso de uso por clase (LendBooksService, ReturnItemService, …)
+│   └── Services/        # one use case per class (LendBooksService, ReturnItemService, …)
 ├── Adapters/
 │   ├── Inbound/Http/    # Controllers/, Middleware/ (JwtAuth, RequireRole), ErrorRenderer, Paginated
 │   └── Outbound/        # Persistence/, Storage/, Security/, Clock/
-├── Bootstrap/           # PortBindingsServiceProvider.php — ÚNICO punto de composición (Art. III)
-└── Console/             # BootstrapAdminCommand (admin inicial desde entorno)
-database/migrations/     # todo el DDL (Art. V, ADR-001)
-routes/api.php           # rutas de api-contract.md §3
+├── Bootstrap/           # PortBindingsServiceProvider.php — the ONLY composition point (Art. III)
+└── Console/             # BootstrapAdminCommand (initial admin from the environment)
+database/migrations/     # all DDL (Art. V, ADR-001)
+routes/api.php           # routes from api-contract.md §3
 ```
 
-## 3. Equivalencias con Laravel
+## 3. Laravel equivalents
 
-| Concepto del spec | En Laravel |
+| Spec concept | In Laravel |
 |---|---|
-| Puerto | `interface` en `app/Application/Ports` |
-| Adaptador | Clase en `app/Adapters/Outbound/*` que implementa el puerto |
-| Composición | `PortBindingsServiceProvider::register()` con `$this->app->singleton(Port::class, Adapter::class)` |
-| Filtro global de baja lógica | Consulta base `activeBooks()` en `PgBookRepository` (`deleted_at IS NULL`) |
-| Transacción de préstamo | `DB::transaction()` dentro del adaptador `PgLoanRepository::saveNew()` |
-| Errores de dominio → HTTP | `ErrorRenderer` registrado en `bootstrap/app.php` (`withExceptions`) |
-| Autorización por rol | Middleware `role:admin,librarian` |
+| Port | `interface` in `app/Application/Ports` |
+| Adapter | Class in `app/Adapters/Outbound/*` that implements the port |
+| Composition | `PortBindingsServiceProvider::register()` with `$this->app->singleton(Port::class, Adapter::class)` |
+| Global soft-delete filter | `activeBooks()` base query in `PgBookRepository` (`deleted_at IS NULL`) |
+| Loan transaction | `DB::transaction()` inside the `PgLoanRepository::saveNew()` adapter |
+| Domain errors → HTTP | `ErrorRenderer`, registered in `bootstrap/app.php` (`withExceptions`) |
+| Role authorization | `role:admin,librarian` middleware |
 
-**Eloquent no se usa**: sus convenciones (`created_at`, `updated_at`, ids autoincrementales) contradicen `data-model.md` §3 y
-acoplarían el dominio al ORM. El Query Builder vive solo en los adaptadores.
+**Eloquent is not used.** Its conventions (`created_at`, `updated_at`, auto-increment ids) contradict `data-model.md` §3, and it
+would couple the domain to the ORM. The Query Builder lives only in the adapters.
 
-## 4. Flujo: registrar un préstamo
+## 4. Flow: registering a loan
 
 ```mermaid
 sequenceDiagram
-    participant C as Cliente
+    participant C as Client
     participant H as LoanController
     participant S as LendBooksService
     participant L as PgLoanRepository
     C->>H: POST /api/v1/loans
     H->>S: lend(memberId, bookIds, userId)
-    S->>L: líneas sin devolver del socio (Q7)
-    S->>S: ¿vencidos? 409 · ¿supera 3? 422
-    S->>S: Loan::open → Book::withdraw por cada libro
-    S->>L: saveNew(loan, books) en una transacción
-    L->>L: UPDATE book … WHERE available_copies = leído (ADR-005)
-    L-->>S: ok o BookNotAvailable
-    S-->>H: préstamo
-    H-->>C: 201 o 409
+    S->>L: member's unreturned lines (Q7)
+    S->>S: overdue? 409 · more than 3? 422
+    S->>S: Loan::open → Book::withdraw for each book
+    S->>L: saveNew(loan, books) in one transaction
+    L->>L: UPDATE book … WHERE available_copies = read value (ADR-005)
+    L-->>S: ok or BookNotAvailable
+    S-->>H: loan
+    H-->>C: 201 or 409
 ```
 
-## 5. Qué no hay
+## 5. What is not included
 
-Sin eventos, colas, caché, Eloquent ni Sanctum. Igual que el spec: se añaden si un requisito lo pide.
+No events, queues, cache, Eloquent or Sanctum. As in the spec, these are added only if a requirement asks for them.
