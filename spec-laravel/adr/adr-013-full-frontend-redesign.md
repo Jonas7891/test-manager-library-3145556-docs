@@ -26,3 +26,8 @@
   - `npm run build` passes;
   - `npm run walkthrough` passes all 8 steps;
   - `git diff` shows no change to `src/api/client.js` or `src/auth/AuthContext.jsx`.
+- **Result (13-10-2026):**
+  - `src/pages/`, `src/components/` and `styles.css` were replaced by `screens/`, `ui/`, `lib/` and `theme.css`;
+  - `git diff` on `src/api/client.js` and `src/auth/AuthContext.jsx` is empty;
+  - `npm run build` passes;
+  - `npm run walkthrough`: 8 steps green on the rebuilt container; screenshots refreshed in `app/evidence/t-22/`.

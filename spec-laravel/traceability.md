@@ -37,11 +37,11 @@ Each acceptance criterion in [`../spec-python/spec.md`](../spec-python/spec.md) 
 
 | Story | Screen |
 |---|---|
-| HU-01 | `LoginPage.jsx` |
-| HU-02 | `UsersPage.jsx` |
-| HU-03 / HU-04 | `BooksPage.jsx` |
-| HU-05 | `MembersPage.jsx` |
-| HU-06 | `NewLoanPage.jsx` |
-| HU-07 / HU-08 | `LoansPage.jsx` |
-| HU-09 | `OverduePage.jsx` |
-| HU-10 | `ReportPage.jsx` |
+| HU-01 | `screens/Login.jsx` |
+| HU-02 | `screens/Librarians.jsx` |
+| HU-03 / HU-04 | `screens/Catalog.jsx` |
+| HU-05 | `screens/Members.jsx` |
+| HU-06 | `screens/NewLoan.jsx` |
+| HU-07 / HU-08 | `screens/Loans.jsx` |
+| HU-09 | `screens/Overdue.jsx` |
+| HU-10 | `screens/Report.jsx` |
