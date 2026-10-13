@@ -26,3 +26,8 @@
   - `git grep` finds neither password in any of the six repositories;
   - logging in with the new admin and librarian works;
   - `npm run walkthrough` passes with the new users.
+- **Result (13-10-2026):**
+  - the database was reset and reseeded;
+  - logins: `Jonas7891` → 200, `Juan Diego` → 200, old `admin` → 401, old `bibliotecario.demo` → 401;
+  - `git grep` on the six repositories finds no password;
+  - the walkthrough is green with the new users.

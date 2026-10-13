@@ -12,7 +12,7 @@
     3. register a loan;
     4. return one line;
     5. open the overdue list and the report;
-    6. log in as `bibliotecario.demo` and check that the admin-only menus are hidden.
+    6. log in as the librarian (`Juan Diego`, ADR-014) and check that the admin-only menus are hidden.
   - It saves one screenshot per step in `app/evidence/t-22/`, and stops with exit code 1 if any step fails.
   - It uses `playwright-core` with the browser already installed on the machine (Edge or Chrome), so no browser is downloaded.
     It is a development dependency only, and does not ship in the image.
