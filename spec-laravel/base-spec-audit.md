@@ -38,10 +38,28 @@ HTTP contract and the data model are identical.
 | B-13 | `plan.md` D-07 lists four value objects (`Isbn`, `Quantity`, `DocumentNumber`, `DateRange`) | T-03 lists only three and leaves out `DocumentNumber` | `DocumentNumber` was implemented and tested anyway (`ValueObjectsTest`) | — |
 | B-14 | `spec-python/tasks.md` T-04/T-05 use method names `Withdraw`, `Restock`, `AddItem`, `ReturnItem` | PascalCase is the .NET convention, copied into the Python version | Naming only; the translation uses PHP camelCase (`withdraw`, `restock`) | — |
 | B-15 | Base commit message footer | The instructor's commit `d1364dd` (and the base commit of the other five repositories) carries a `Co-Authored-By` trailer, which the delivery rules forbid for our commits | **Not changed**: it is someone else's history and would need a `push --force` | N-5 |
+| B-16 | Contract §1 lists statuses 200–422 only; catalogue §2 has no code for an unexpected server failure | RNF-4 still requires the single error body for every response | Answered with 500 `INTERNAL_ERROR`, the only code outside the catalogue | [`decisions-and-gaps.md`](decisions-and-gaps.md) H-19 |
 
 ## 3. Summary
 
 - **Corrected in the translation and backed by an ADR:** B-1, B-3, B-4, B-6, B-7 and B-9.
-- **Resolved as a gap decision (no architecture impact):** B-5, B-8, B-13 and B-14.
+- **Resolved as a gap decision (no architecture impact):** B-5, B-8, B-13, B-14 and B-16.
 - **Not done, with the reason recorded:** B-2, B-10, B-11, B-12 and B-15.
 - **Base spec:** unchanged. These small faults are left in the base as delivered.
+
+## 4. Scope check: nothing added, nothing removed
+
+Checked on 13-10-2026 against `spec-python/api-contract.md`, `spec.md` and `tasks.md`.
+
+| Item | Base spec | Delivered | Difference and reason |
+|---|---|---|---|
+| Endpoints | 20 rows in contract §3 | Those 20, with the same method and path | **+1** `GET /books/{id}/cover`: named in the §3.4 text (B-6, ADR-009). `/health` is also served under `/api/v1` (B-5) |
+| Error codes | 14 in catalogue §2 | The same 14 | **+1** `INTERNAL_ERROR` for unexpected failures only (B-16, H-19) |
+| Tables | 6, no `DEFAULT`, no `status` column | 6 in schema `library` | Laravel's `migrations` log table lives in `public`, outside `library` (S-5) |
+| User stories / acceptance criteria | HU-01…HU-10 | All traced to a test in [`traceability.md`](traceability.md) | None |
+| Frontend calls | Contract endpoints only | The app only calls contract endpoints (users: `POST /users` only) | None |
+| Configuration | Variables in `plan.md` §2 | Same variables | **+1** `CLOCK_OFFSET_DAYS`, `0` by default, demo only (B-3, ADR-006) |
+| Tasks | T-01…T-23 | 22 done, T-22 partial | T-22 evidence is the fair walkthrough (B-12) |
+| Not delivered | — | CI secret scan, S3 adapter, ADR-002 retry | B-10, B-11, B-2 |
+
+`tool/seed/load.mjs` and `seed.mjs --check` are evidence scripts for RNF-1 and T-21, not product features.
