@@ -1,6 +1,6 @@
 # ADR-015 · English everywhere except text shown to users
 
-- **Status:** accepted (being applied)
+- **Status:** accepted (applied)
 - **Context:** the owner asked that all documentation, code and comments be in English, and that only the messages users see
   stay in Spanish.
 - **Decision:**
@@ -16,3 +16,12 @@
   - READMEs still in Spanish: `api`, `app`, `infra`, `tool` and `page`;
   - code comments still in Spanish: about 91 lines in `api`, 16 in `app`, 10 in `tool` and 5 in `infra`.
 - **How it is verified:** a `git grep` for Spanish words in comments and READMEs returns only user-facing strings.
+- **Result (13-10-2026):**
+  - the five READMEs (`api`, `app`, `infra`, `tool`, `page`) and all code comments are now in English, and `git grep` finds
+    no Spanish comment left;
+  - user-facing texts are unchanged;
+  - final check:
+    - API suite: 59 tests, 394 assertions, all green;
+    - `/health`: ok;
+    - `seed.mjs --check`: "Vencidos: 3";
+    - `npm run walkthrough`: 8 steps green.
