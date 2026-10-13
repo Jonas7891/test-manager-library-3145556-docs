@@ -42,7 +42,7 @@ business is identical. `spec-python/` was used as the reading base.
 | [`tasks.md`](tasks.md) | Real status of T-01…T-23 with a link to the evidence |
 | [`base-spec-audit.md`](base-spec-audit.md) | Inconsistencies found in the instructor's base commit (base left unchanged) |
 | [`not-done-and-reasons.md`](not-done-and-reasons.md) | What could not be done as the spec says, and why |
-| [`adr/`](adr/) | ADR-005 to ADR-011 |
+| [`adr/`](adr/) | ADR-005 to ADR-012 |
 | `evidence/` | Command outputs used as evidence |
 
 ## Repositories
